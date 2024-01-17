@@ -1,11 +1,13 @@
 const express = require('express');
+const { app, configureServer } = require('./server'); // Adjust the path accordingly
 require('dotenv').config();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const dbConn = require('./src/bin/connection').dbConn;
 
-// Express configurations
-var app = express();
+// Server Configurations
+const port = process.env.PORT || 3000;
+configureServer(port);
 
 //body paser
 app.use(express.json({ limit: '50mb' }));
@@ -24,9 +26,4 @@ app.get('/test', (req, res, next) => {
     message: 'hello world',
     success: 'true',
   });
-});
-
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Connected to port ${port}`);
 });
