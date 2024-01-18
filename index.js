@@ -4,6 +4,9 @@ require('dotenv').config();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const dbConn = require('./src/bin/connection').dbConn;
+const winston = require('winston');
+const morgan = require('morgan');
+require('winston-mongodb');
 
 // Server Configurations
 const port = process.env.PORT || 3000;
