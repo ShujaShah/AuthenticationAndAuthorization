@@ -4,9 +4,9 @@ require('dotenv').config();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const dbConn = require('./src/bin/connection').dbConn;
-const winston = require('winston');
 const morgan = require('morgan');
 require('winston-mongodb');
+const { logger } = require('./src/bin/winston-logger');
 
 // Server Configurations
 const port = process.env.PORT || 3000;
@@ -17,10 +17,6 @@ app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
 
 let mongo_url = process.env.MONGO_URL;
-
-//use winston for error logger
-winston.add(new winston.transports.File({ filename: 'logfile.log' }));
-winston.add(new winston.transports.MongoDB({ db: mongo_url, level: 'error' }));
 
 // using morgan for showing the request status
 app.use(morgan('tiny'));
