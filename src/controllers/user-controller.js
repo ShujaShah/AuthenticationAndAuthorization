@@ -19,9 +19,6 @@ const CreateUser = async (req, res, next) => {
   });
 
   user = await user.save();
-  res.status(201).json({
-    data: user,
-  });
 
   //create token and email
   const activationToken = createActivationToken(user);
@@ -40,7 +37,7 @@ const CreateUser = async (req, res, next) => {
     });
     res.status(201).json({
       success: true,
-      message: `Please check you email ${user.email} to activate your account!`,
+      message: `Please check your email ${user.email} to activate your account!`,
       activationToken: activationToken.token,
     });
   } catch (error) {
