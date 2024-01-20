@@ -38,6 +38,7 @@ const CreateUser = async (req, res, next) => {
     res.status(201).json({
       success: true,
       message: `Please check your email ${user.email} to activate your account!`,
+      activationCode: activationCode,
       activationToken: activationToken.token,
     });
   } catch (error) {
