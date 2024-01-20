@@ -18,7 +18,7 @@ const CreateUser = async (req, res, next) => {
     password: req.body.password,
   });
 
-  user = await user.save();
+  // user = await user.save();
 
   //create token and email
   const activationToken = createActivationToken(user);
@@ -60,4 +60,30 @@ const createActivationToken = (user) => {
   return { token, activationCode };
 };
 
-module.exports = { CreateUser };
+//Activate User
+const ActivateUser = async (req, res, next) => {
+  const { activation_token, activation_code } = req.body;
+  const newUser = Jwt.verify(activation_token, process.env.JWTPrivateKey);
+
+  if (newUser.activationCode !== activation_code) {
+    return next(new Error('Invalid Code', 400));
+  }
+
+  const { name, email, password } = newUser.user;
+
+  let existing_user = await User.findOne({ email });
+  if (existing_user) {
+    return next(new Error('user already exists'));
+  }
+  let user = await User.create({
+    name,
+    email,
+    password,
+  });
+  res.status(201).json({
+    success: true,
+    data: user,
+  });
+};
+
+module.exports = { CreateUser, ActivateUser };
