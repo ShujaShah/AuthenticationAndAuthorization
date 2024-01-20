@@ -3,11 +3,12 @@ const { app, configureServer } = require('./server');
 require('dotenv').config();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const dbConn = require('./src/bin/connection').dbConn;
+const dbConn = require('./bin/connection').dbConn;
 const morgan = require('morgan');
 require('winston-mongodb');
-const routes = require('./src/router/routes');
-const userRouter = require('./src/router/user');
+
+const error = require('./middlewares/error');
+const routes = require('./router/routes');
 
 // Server Configurations
 const port = process.env.PORT || 3000;
@@ -24,6 +25,7 @@ app.use(morgan('tiny'));
 
 //
 app.use('/api/v1', routes);
+app.use(error);
 
 //implement cors
 app.use(
