@@ -25,7 +25,7 @@ app.use(morgan('tiny'));
 
 //
 app.use('/api/v1', routes);
-app.use(error);
+//app.use(error);
 
 //implement cors
 app.use(

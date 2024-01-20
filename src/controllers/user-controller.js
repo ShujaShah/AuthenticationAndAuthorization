@@ -10,7 +10,7 @@ const CreateUser = async (req, res, next) => {
   if (error) return res.status(400).send(error.details[0].message);
   const checkMail = await User.findOne({ email: req.body.email });
   if (checkMail) {
-    return next(new Error('Email alreay exists'));
+    return next(new Error('Email already exists'));
   }
   let user = new User({
     email: req.body.email,
