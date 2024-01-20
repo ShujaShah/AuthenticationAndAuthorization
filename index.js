@@ -1,13 +1,12 @@
 const express = require('express');
-const { app, configureServer } = require('./server'); // Adjust the path accordingly
+const { app, configureServer } = require('./server');
 require('dotenv').config();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const dbConn = require('./src/bin/connection').dbConn;
 const morgan = require('morgan');
 require('winston-mongodb');
-// const { logger } = require('./src/bin/winston-logger');
-
+const routes = require('./src/router/routes');
 const userRouter = require('./src/router/user');
 
 // Server Configurations
@@ -24,7 +23,7 @@ let mongo_url = process.env.MONGO_URL;
 app.use(morgan('tiny'));
 
 //
-app.use('/api/v1', userRouter);
+app.use('/api/v1', routes);
 
 //implement cors
 app.use(
