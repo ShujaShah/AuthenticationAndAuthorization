@@ -47,7 +47,7 @@ const userSchema = new mongoose.Schema(
 );
 
 //Hash the password
-userSchema.pre('save', async () => {
+userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     next();
   }
@@ -69,7 +69,7 @@ function validateUser(user) {
     password: Joi.string().min(5).required(),
     avatar: Joi.string(),
     role: Joi.string(),
-    isVerified: Joi.Boolean(),
+    isVerified: Joi.boolean(),
     courses: Joi.array(),
   });
   return schema.validate(user);

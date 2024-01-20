@@ -6,7 +6,9 @@ const cookieParser = require('cookie-parser');
 const dbConn = require('./src/bin/connection').dbConn;
 const morgan = require('morgan');
 require('winston-mongodb');
-const { logger } = require('./src/bin/winston-logger');
+// const { logger } = require('./src/bin/winston-logger');
+
+const userRouter = require('./src/router/user');
 
 // Server Configurations
 const port = process.env.PORT || 3000;
@@ -20,6 +22,10 @@ let mongo_url = process.env.MONGO_URL;
 
 // using morgan for showing the request status
 app.use(morgan('tiny'));
+
+//
+app.use('/api/v1', userRouter);
+
 //implement cors
 app.use(
   cors({
@@ -27,10 +33,3 @@ app.use(
     optionSuccessStatus: 200,
   })
 );
-
-app.get('/test', (req, res, next) => {
-  res.status(200).json({
-    message: 'hello world',
-    success: 'true',
-  });
-});
