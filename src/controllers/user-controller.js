@@ -110,4 +110,19 @@ const LoginUser = async (req, res, next) => {
   }
 };
 
-module.exports = { CreateUser, ActivateUser, LoginUser };
+//handle logout
+const LogoutUser = async (req, res, next) => {
+  try {
+    res.cookie('access_token', '', { maxAge: 1 });
+    res.cookie('refreshß_token', '', { maxAge: 1 });
+
+    res.status(201).json({
+      success: true,
+      message: 'logged out successfully',
+    });
+  } catch (error) {
+    return next(new Error(error.message, 400));
+  }
+};
+
+module.exports = { CreateUser, ActivateUser, LoginUser, LogoutUser };
