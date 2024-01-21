@@ -1,12 +1,12 @@
-const { User, validateUser } = require('../models/entities/user');
+const { user, validateuser } = require('../models/entities/user');
 const redis = require('./redis');
+require('dotenv').config();
 
-const sendToken = (User, statusCode, res) => {
-  const accessToken = User.SignAccessToken();
-  const refreshToken = User.SignRefreshToken();
+const sendToken = (user, statusCode, res) => {
+  const accessToken = user.SignAccessToken();
+  const refreshToken = user.SignRefreshToken();
 
-  //Todo: uplaod session to the redis
-  redis.set(User._id, JSON.stringify(User));
+  redis.set(user._id, JSON.stringify(user));
 
   // parse environment variables to integrate with fallback values
   const accessTokenExpire = parseInt(
@@ -43,7 +43,7 @@ const sendToken = (User, statusCode, res) => {
 
   res.status(statusCode).json({
     success: true,
-    User,
+    user,
     accessToken,
   });
 };

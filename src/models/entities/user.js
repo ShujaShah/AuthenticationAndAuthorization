@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Joi = require('joi');
 const bcrypt = require('bcryptjs');
 const Jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const userSchema = new mongoose.Schema(
   {
@@ -58,16 +59,16 @@ userSchema.pre('save', async function (next) {
 
 //Sign Access Token
 userSchema.methods.SignAccessToken = function () {
-  return Jwt.sign({ id: this._id }, process.env.ACCESSTOKEN || '');
+  return Jwt.sign({ id: this._id }, process.env.ACCESS_TOKEN || '');
 };
 
 //Sign refresh token
 userSchema.methods.SignRefreshToken = function () {
-  return Jwt.sign({ id: this._id }, process.env.REFRESHTOKEN || '');
+  return Jwt.sign({ id: this._id }, process.env.REFRESH_TOKEN || '');
 };
 
 //Compare the passwords
-userSchema.methods.comparePassword = async (enteredPassword) => {
+userSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 

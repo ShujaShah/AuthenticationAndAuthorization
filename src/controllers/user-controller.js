@@ -4,7 +4,8 @@ const { User, validateUser } = require('../models/entities/user');
 const Jwt = require('jsonwebtoken');
 const ejs = require('ejs');
 const path = require('path');
-const { sendToken } = require('../utils/jwt');
+const sendToken = require('../utils/jwt');
+require('dotenv').config();
 
 const CreateUser = async (req, res, next) => {
   const { error } = validateUser(req.body);
