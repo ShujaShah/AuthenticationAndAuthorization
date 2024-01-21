@@ -4,6 +4,7 @@ const { User, validateUser } = require('../models/entities/user');
 const Jwt = require('jsonwebtoken');
 const ejs = require('ejs');
 const path = require('path');
+const { sendToken } = require('../utils/jwt');
 
 const CreateUser = async (req, res, next) => {
   const { error } = validateUser(req.body);
@@ -17,8 +18,6 @@ const CreateUser = async (req, res, next) => {
     name: req.body.name,
     password: req.body.password,
   });
-
-  // user = await user.save();
 
   //create token and email
   const activationToken = createActivationToken(user);
@@ -87,4 +86,27 @@ const ActivateUser = async (req, res, next) => {
   });
 };
 
-module.exports = { CreateUser, ActivateUser };
+//Login User
+
+const LoginUser = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (!email | !password) {
+      return next(new Error('Please enter email and password'));
+    }
+    const user = await User.findOne({ email }).select('+password');
+
+    if (!user) {
+      return next(new Error('Invalid Email or Password', 400));
+    }
+    const passwordMatch = await user.comparePassword(password);
+    if (!passwordMatch) {
+      return next(new Error('Email or Password incorrect'));
+    }
+    sendToken(user, 200, res);
+  } catch (error) {
+    return next(new Error(error.message));
+  }
+};
+
+module.exports = { CreateUser, ActivateUser, LoginUser };

@@ -1,4 +1,4 @@
-import { Redis } from 'ioredis';
+const Redis = require('ioredis');
 require('dotenv').config();
 
 const redisClient = () => {
@@ -9,4 +9,4 @@ const redisClient = () => {
   throw new Error('Redis connection failed...');
 };
 
-export default { redisClient };
+module.exports = redisClient;
