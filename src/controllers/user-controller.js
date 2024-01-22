@@ -6,6 +6,7 @@ const ejs = require('ejs');
 const path = require('path');
 const sendToken = require('../utils/jwt');
 require('dotenv').config();
+const redis = require('../utils/redis');
 
 const CreateUser = async (req, res, next) => {
   const { error } = validateUser(req.body);
@@ -114,7 +115,10 @@ const LoginUser = async (req, res, next) => {
 const LogoutUser = async (req, res, next) => {
   try {
     res.cookie('access_token', '', { maxAge: 1 });
-    res.cookie('refreshß_token', '', { maxAge: 1 });
+    res.cookie('refresh_token', '', { maxAge: 1 });
+    const userId = req.user?._id || '';
+
+    redis.del(userId);
 
     res.status(201).json({
       success: true,
@@ -125,4 +129,25 @@ const LogoutUser = async (req, res, next) => {
   }
 };
 
-module.exports = { CreateUser, ActivateUser, LoginUser, LogoutUser };
+//validate user role
+const authorizeRoles = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user?.role || '')) {
+      return next(
+        new Error(
+          `Role: ${req.user?.role} is not allowed to access this resource`,
+          403
+        )
+      );
+    }
+    next();
+  };
+};
+
+module.exports = {
+  CreateUser,
+  ActivateUser,
+  LoginUser,
+  LogoutUser,
+  authorizeRoles,
+};
