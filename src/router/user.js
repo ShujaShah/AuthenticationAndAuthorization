@@ -13,6 +13,6 @@ const userRouter = express.Router();
 userRouter.post('/registration', CreateUser);
 userRouter.post('/activate', ActivateUser);
 userRouter.post('/login', LoginUser);
-userRouter.post('/logout', isAuthenticated, authorizeRoles, LogoutUser);
+userRouter.post('/logout', isAuthenticated, LogoutUser);
 
 module.exports = userRouter;
