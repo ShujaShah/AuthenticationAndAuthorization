@@ -5,6 +5,7 @@ const {
   LoginUser,
   LogoutUser,
   authorizeRoles,
+  updateAccessToken,
 } = require('../controllers/user-controller');
 const isAuthenticated = require('../middlewares/auth');
 
@@ -14,5 +15,6 @@ userRouter.post('/registration', CreateUser);
 userRouter.post('/activate', ActivateUser);
 userRouter.post('/login', LoginUser);
 userRouter.post('/logout', isAuthenticated, LogoutUser);
+userRouter.get('/refresh-token', updateAccessToken);
 
 module.exports = userRouter;
