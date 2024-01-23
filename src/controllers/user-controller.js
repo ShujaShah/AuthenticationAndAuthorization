@@ -118,7 +118,7 @@ const LogoutUser = async (req, res, next) => {
     res.cookie('refresh_token', '', { maxAge: 1 });
     const userId = req.user?._id || '';
 
-    redis.del(userId);
+    redis.del(userId); // delete the cache from redis
 
     res.status(201).json({
       success: true,
