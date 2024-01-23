@@ -124,6 +124,44 @@ const LoginUser = async (req, res, next) => {
   }
 };
 
+//Get Authenticated user
+const getAuthenticatedUser = async (req, res, next) => {
+  try {
+    const loggedUser = req.user;
+    const user = await User.findById(loggedUser);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    next(new Error(error.message));
+  }
+};
+
+//social auth
+const socialAuth = async (req, res, next) => {
+  try {
+    const { email, name, avatar } = req.body;
+    const user = User.findOne({ email });
+    if (!user) {
+      const newUser = await User.create({ email, name, avatar });
+      sendToken(newUser, 200, res);
+    } else {
+      sendToken(user, 200, res);
+    }
+  } catch (error) {
+    return next(new Error(message), 400);
+  }
+};
+
 //handle logout
 const LogoutUser = async (req, res, next) => {
   try {
@@ -199,8 +237,10 @@ const updateAccessToken = async (req, res, next) => {
 module.exports = {
   CreateUser,
   ActivateUser,
+  getAuthenticatedUser,
   LoginUser,
   LogoutUser,
+  socialAuth,
   authorizeRoles,
   updateAccessToken,
 };
