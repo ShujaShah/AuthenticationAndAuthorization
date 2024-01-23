@@ -150,7 +150,7 @@ const getAuthenticatedUser = async (req, res, next) => {
 const socialAuth = async (req, res, next) => {
   try {
     const { email, name, avatar } = req.body;
-    const user = User.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
       const newUser = await User.create({ email, name, avatar });
       sendToken(newUser, 200, res);
@@ -158,7 +158,7 @@ const socialAuth = async (req, res, next) => {
       sendToken(user, 200, res);
     }
   } catch (error) {
-    return next(new Error(message), 400);
+    return next(new Error(error.message, 400));
   }
 };
 

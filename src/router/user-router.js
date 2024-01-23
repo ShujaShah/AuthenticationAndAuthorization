@@ -19,6 +19,6 @@ userRouter.post('/login', LoginUser);
 userRouter.get('/me', isAuthenticated, getAuthenticatedUser);
 userRouter.post('/logout', isAuthenticated, LogoutUser);
 userRouter.get('/refresh-token', updateAccessToken);
-userRouter.post('/social', socialAuth);
+userRouter.post('/social-auth', socialAuth);
 
 module.exports = userRouter;
